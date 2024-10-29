@@ -28,7 +28,7 @@ static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
 }
 
 int main(int argc, const char **argv)
-{    
+{   // The OSM data is read into the program. 
     std::string osm_data_file = "";
     if( argc > 1 ) {
         for( int i = 1; i < argc; ++i )
@@ -52,20 +52,30 @@ int main(int argc, const char **argv)
             osm_data = std::move(*data);
     }
     
-    // TODO 1: Declare floats `start_x`, `start_y`, `end_x`, and `end_y` and get
+    // Declare floats `start_x`, `start_y`, `end_x`, and `end_y` and get
     // user input for these values using std::cin. Pass the user input to the
-    // RoutePlanner object below in place of 10, 10, 90, 90.
+    // RoutePlanner object below.
+    float start_x, start_y, end_x, end_y;
+    std::cout << "Enter the starting x-coordinate (0-100): and press enter: ";
+    std::cin >> start_x;
+    std::cout << "Enter the starting y-coordinate (0-100): and press enter:  ";
+    std::cin >> start_y;
+    std::cout << "Enter the ending x-coordinate (0-100): and press enter: ";
+    std::cin >> end_x;
+    std::cout << "Enter the ending y-coordinate (0-100): and press enter: ";
+    std::cin >> end_y;
 
-    // Build Model.
+
+    // Build Model to store the OSM data.
     RouteModel model{osm_data};
 
-    // Create RoutePlanner object and perform A* search.
-    RoutePlanner route_planner{model, 10, 10, 90, 90};
+    // Create RoutePlanner object and perform A* search on the model data and store the search results in the RouteModel.
+    RoutePlanner route_planner{model, start_x, start_y, end_x, end_y};
     route_planner.AStarSearch();
 
     std::cout << "Distance: " << route_planner.GetDistance() << " meters. \n";
 
-    // Render results of search.
+    // Render results of search using io2d library.
     Render render{model};
 
     auto display = io2d::output_surface{400, 400, io2d::format::argb32, io2d::scaling::none, io2d::refresh_style::fixed, 30};

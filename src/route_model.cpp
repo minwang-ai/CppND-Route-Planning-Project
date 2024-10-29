@@ -42,6 +42,13 @@ RouteModel::Node *RouteModel::Node::FindNeighbor(std::vector<int> node_indices) 
 }
 
 
+/**
+ * @brief Finds and assigns the neighboring nodes for the current node.
+ *
+ * This function iterates through all the roads connected to the current node
+ * and finds the neighboring nodes using the FindNeighbor method. If a valid
+ * neighbor is found, it is added to the neighbors vector of the current node.
+ */
 void RouteModel::Node::FindNeighbors() {
     for (auto & road : parent_model->node_to_road[this->index]) {
         RouteModel::Node *new_neighbor = this->FindNeighbor(parent_model->Ways()[road->way].nodes);
@@ -52,6 +59,18 @@ void RouteModel::Node::FindNeighbors() {
 }
 
 
+/**
+ * @brief Finds the closest node to the given node with coordinates (x, y).
+ *
+ * This function iterates through all the roads and their corresponding nodes,
+ * excluding footways, to find the node that is closest to the given node with (x, y) 
+ * coordinates. 
+ * It calculates the distance and keeps track of the node with the minimum distance.
+ *
+ * @param float: x The x-coordinate of given node.
+ * @param float: y The y-coordinate of given node.
+ * @return RouteModel::Node&: A reference to the closest node.
+ */
 RouteModel::Node &RouteModel::FindClosestNode(float x, float y) {
     Node input;
     input.x = x;
