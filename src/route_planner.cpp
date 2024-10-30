@@ -122,26 +122,33 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
  * @brief Performs the A* Search algorithm to find the shortest path from the start node to the end node.
  * 
  * This function uses the A* Search algorithm to navigate through the nodes of the route model.
- * It continues to explore nodes until the end node is reached. 
+ * It continues to explore nodes until there are no new nodes to explore. 
  * 
- * During the search, it adds neighbors
- * of the current node to the open list and selects the next node to explore based on the lowest
- * cost path. Once the end node is reached, it constructs the final path from the start node to the
- * end node and assigns it to the model's path.
+ * During the search, it selects the next node to explore based on the lowest
+ * cost path. If the end node is reached, it constructs the final path from the start node to the
+ * end node and assigns it to the model's path. If not, it adds neighbors
+ * of the current node to the open list and continues the search.
  */
 void RoutePlanner::AStarSearch() {
+    // initialize the starting node
+    // ensures that the algorithm starts correctly and does not revisit the start_node.
     RouteModel::Node *current_node = start_node;
+    current_node->visited = true;
     open_list.push_back(start_node);
 
-    while(!open_list.empty() && current_node != end_node){    
-        AddNeighbors(current_node);
+    while(!open_list.empty()){    
         current_node = NextNode();
-    }
+
     // Check if end_node was reached
     if (current_node == end_node) {
         m_Model.path = ConstructFinalPath(current_node);
-    } else {
-        std::cerr << "A* search failed to find a path to the end node.\n";
+        return;
+    } 
+
+    // If end_node was not reached, expand search to current node's neighbors
+    AddNeighbors(current_node);
     }
+    // We've run out of new nodes to explore and haven't found a path.
+    std::cout << "No path found!" << "\n";
 
 }
