@@ -139,14 +139,14 @@ void RoutePlanner::AStarSearch() {
     while(!open_list.empty()){    
         current_node = NextNode();
 
-    // Check if end_node was reached
-    if (current_node == end_node) {
-        m_Model.path = ConstructFinalPath(current_node);
-        return;
-    } 
+        // Check if end_node was reached
+        if (current_node == end_node) {
+            m_Model.path = ConstructFinalPath(current_node);
+            return;
+        } 
 
-    // If end_node was not reached, expand search to current node's neighbors
-    AddNeighbors(current_node);
+        // If end_node was not reached, expand search to current node's neighbors
+        AddNeighbors(current_node);
     }
     // We've run out of new nodes to explore and haven't found a path.
     std::cout << "No path found!" << "\n";
